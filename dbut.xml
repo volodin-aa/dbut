@@ -46,7 +46,7 @@ test - load test data from *.sql
         <arg value="${db.name}"/>
       </exec>
       <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
-        <arg value="-1"/>
+        <arg value="--set=ON_ERROR_STOP"/>
         <arg value="-h"/>
         <arg value="${db.host}"/>
         <arg value="-p"/>
@@ -65,7 +65,7 @@ test - load test data from *.sql
     </target>
     <target name="test">
       <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
-        <arg value="-1"/>
+        <arg value="--set=ON_ERROR_STOP"/>
         <arg value="-h"/>
         <arg value="${db.host}"/>
         <arg value="-p"/>
