@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project name="dbut" default="help">
+    <property name="dbut.properties" value="dbut.properties"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.include" value="**/*.sql"/>
+    <property name="test.dir" value="test"/>
+    <property name="test.include" value="**/*.sql"/>
+
+    <property file="${dbut.properties}"/>
+
+    <target name="help">
+        <echo>dbut v0.0.0
+DataBase Unit Tests
+
+Targets:
+
+help - help
+clean - DROP database
+build - create database and load *.sql files
+test - load test data from *.sql
+</echo>
+    </target>
+    <target name="clean">
+      <exec executable="dropdb" failonerror="true" failifexecutionfails="true">
+        <arg value="--if-exists"/>
+        <arg value="-f"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="${db.name}"/>
+      </exec>
+    </target>
+    <target name="build">
+      <exec executable="createdb" failonerror="true" failifexecutionfails="true">
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-E"/>
+        <arg value="${db.encoding}"/>
+        <arg value="${db.name}"/>
+      </exec>
+      <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
+        <arg value="-1"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-d"/>
+        <arg value="${db.name}"/>
+        <arg value="-f"/>
+        <fileset dir="${build.dir}">
+          <patternset>
+            <include name="${build.include}"/>
+          </patternset>
+        </fileset>
+      </apply>
+    </target>
+    <target name="test">
+      <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
+        <arg value="-1"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-d"/>
+        <arg value="${db.name}"/>
+        <arg value="-f"/>
+        <fileset dir="${test.dir}">
+          <patternset>
+            <include name="${test.include}"/>
+          </patternset>
+        </fileset>
+      </apply>
+    </target>
+</project>
