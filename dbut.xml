@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 <project name="dbut" default="help">
     <property name="dbut.properties" value="dbut.properties"/>
+    <property file="${dbut.properties}"/>
+
     <property name="build.dir" value="build"/>
     <property name="build.include" value="**/*.sql"/>
-    <property name="test.dir" value="test"/>
+
+	<property name="test.dir" value="test"/>
     <property name="test.include" value="**/*.sql"/>
 
-    <property file="${dbut.properties}"/>
+	<property name="db.encoding" value="UTF8"/>
 
     <target name="help">
         <echo>dbut v0.0.0
