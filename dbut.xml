@@ -5,11 +5,13 @@
 
     <property name="build.dir" value="build"/>
     <property name="build.include" value="**/*.sql"/>
+    <property name="build.on_error_stop" value="on"/>
 
 	<property name="test.dir" value="test"/>
     <property name="test.include" value="**/*.sql"/>
+    <property name="test.on_error_stop" value="on"/>
 
-	<property name="db.encoding" value="UTF8"/>
+    <property name="db.encoding" value="UTF8"/>
 
     <target name="help">
         <echo>dbut v0.0.0
@@ -37,7 +39,7 @@ test - load test data from *.sql
       </exec>
     </target>
     <target name="build">
-      <exec executable="createdb" failonerror="true" failifexecutionfails="true">
+      <exec executable="createdb" failonerror="true">
         <arg value="-h"/>
         <arg value="${db.host}"/>
         <arg value="-p"/>
@@ -48,8 +50,8 @@ test - load test data from *.sql
         <arg value="${db.encoding}"/>
         <arg value="${db.name}"/>
       </exec>
-      <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
-        <arg value="--set=ON_ERROR_STOP"/>
+      <apply executable="psql" failonerror="true" verbose="true">
+        <arg value="--set=ON_ERROR_STOP=${build.on_error_stop}"/>
         <arg value="-h"/>
         <arg value="${db.host}"/>
         <arg value="-p"/>
@@ -67,8 +69,8 @@ test - load test data from *.sql
       </apply>
     </target>
     <target name="test">
-      <apply executable="psql" failonerror="true" failifexecutionfails="true" verbose="true">
-        <arg value="--set=ON_ERROR_STOP"/>
+      <apply executable="psql" failonerror="true" verbose="true">
+        <arg value="--set=ON_ERROR_STOP=${test.on_error_stop}"/>
         <arg value="-h"/>
         <arg value="${db.host}"/>
         <arg value="-p"/>
