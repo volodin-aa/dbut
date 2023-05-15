@@ -11,6 +11,10 @@
     <property name="test.include" value="**/*.sql"/>
     <property name="test.on_error_stop" value="on"/>
 
+    <property name="db.host" value=""/>
+    <property name="db.port" value=""/>
+    <property name="db.user" value=""/>
+    <property name="db.name" value=""/>
     <property name="db.encoding" value="UTF8"/>
 
     <target name="help">
