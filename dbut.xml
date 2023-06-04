@@ -15,7 +15,14 @@
     <property name="db.port" value=""/>
     <property name="db.user" value=""/>
     <property name="db.name" value=""/>
+    <property name="db.template" value="template0"/>
     <property name="db.encoding" value="UTF8"/>
+    <property name="db.encoding" value="UTF8"/>
+    <property name="db.locale" value="C.UTF-8"/>
+    <property name="db.lc-collate" value="${db.locale}"/>
+    <property name="db.lc-ctype" value="${db.locale}"/>
+    <property name="db.locale-provider" value="icu"/>
+    <property name="db.icu-locale" value="und-x-icu"/>
 
     <target name="help">
         <echo>dbut v0.0.0
@@ -52,6 +59,11 @@ test - load test data from *.sql
         <arg value="${db.user}"/>
         <arg value="-E"/>
         <arg value="${db.encoding}"/>
+        <arg value="--lc-collate=${db.lc-collate}"/>
+        <arg value="--lc-ctype=${db.lc-ctype}"/>
+        <arg value="--locale-provider=${db.locale-provider}"/>
+        <arg value="--icu-locale=${db.icu-locale}"/>
+        <arg value="--template=${db.template}"/>
         <arg value="${db.name}"/>
       </exec>
       <apply executable="psql" failonerror="true" verbose="true">
