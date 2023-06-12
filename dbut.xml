@@ -17,7 +17,6 @@
     <property name="db.name" value=""/>
     <property name="db.template" value="template0"/>
     <property name="db.encoding" value="UTF8"/>
-    <property name="db.encoding" value="UTF8"/>
     <property name="db.locale" value="C.UTF-8"/>
     <property name="db.lc-collate" value="${db.locale}"/>
     <property name="db.lc-ctype" value="${db.locale}"/>
