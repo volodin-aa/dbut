@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<project name="dbut" default="help">
+    <property name="dbut.properties" value="dbut.properties"/>
+    <property file="${dbut.properties}"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="build.include" value="**/*.sql"/>
+    <property name="build.on_error_stop" value="on"/>
+
+	<property name="test.dir" value="test"/>
+    <property name="test.include" value="**/*.sql"/>
+    <property name="test.on_error_stop" value="on"/>
+
+    <property name="db.host" value=""/>
+    <property name="db.port" value=""/>
+    <property name="db.user" value=""/>
+    <property name="db.name" value=""/>
+    <property name="db.template" value="template0"/>
+    <property name="db.encoding" value="UTF8"/>
+    <property name="db.locale" value="C.UTF-8"/>
+    <property name="db.lc-collate" value="${db.locale}"/>
+    <property name="db.lc-ctype" value="${db.locale}"/>
+    <property name="db.locale-provider" value="icu"/>
+    <property name="db.icu-locale" value="und-x-icu"/>
+
+    <target name="help">
+        <echo>dbut v0.1.0
+DataBase Unit Tests
+
+Targets:
+
+help - help
+clean - DROP database
+build - create database and load *.sql files
+test - load test data from *.sql
+</echo>
+    </target>
+    <target name="clean">
+      <exec executable="dropdb" failonerror="true" failifexecutionfails="true">
+        <arg value="--if-exists"/>
+        <arg value="-f"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="${db.name}"/>
+      </exec>
+    </target>
+    <target name="build">
+      <exec executable="createdb" failonerror="true">
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-E"/>
+        <arg value="${db.encoding}"/>
+        <arg value="--lc-collate=${db.lc-collate}"/>
+        <arg value="--lc-ctype=${db.lc-ctype}"/>
+        <arg value="--locale-provider=${db.locale-provider}"/>
+        <arg value="--icu-locale=${db.icu-locale}"/>
+        <arg value="--template=${db.template}"/>
+        <arg value="${db.name}"/>
+      </exec>
+      <apply executable="psql" failonerror="true" verbose="true">
+        <arg value="--set=ON_ERROR_STOP=${build.on_error_stop}"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-d"/>
+        <arg value="${db.name}"/>
+        <arg value="-f"/>
+        <fileset dir="${build.dir}">
+          <patternset>
+            <include name="${build.include}"/>
+          </patternset>
+        </fileset>
+      </apply>
+    </target>
+    <target name="test">
+      <apply executable="psql" failonerror="true" verbose="true">
+        <arg value="--set=ON_ERROR_STOP=${test.on_error_stop}"/>
+        <arg value="-h"/>
+        <arg value="${db.host}"/>
+        <arg value="-p"/>
+        <arg value="${db.port}"/>
+        <arg value="-U"/>
+        <arg value="${db.user}"/>
+        <arg value="-d"/>
+        <arg value="${db.name}"/>
+        <arg value="-f"/>
+        <fileset dir="${test.dir}">
+          <patternset>
+            <include name="${test.include}"/>
+          </patternset>
+        </fileset>
+      </apply>
+    </target>
+</project>
