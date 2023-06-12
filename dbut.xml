@@ -24,7 +24,7 @@
     <property name="db.icu-locale" value="und-x-icu"/>
 
     <target name="help">
-        <echo>dbut v0.0.0
+        <echo>dbut v0.1.0
 DataBase Unit Tests
 
 Targets:
