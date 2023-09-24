@@ -1,12 +1,14 @@
 # dbut
 
-dbut v0.1.0
+dbut v0.2.0
 DataBase Unit Tests
 
 ### Targets
 
 - help - help
 - clean - DROP database
-- build - create database and load *.sql files
+- build - create database and load *.sql files from build.dir
+    - build-db - only create database
+    - build-sql - only load *.sql files from build.dir
 - test - load test data from *.sql
 
