@@ -37,6 +37,36 @@ build - create database and load *.sql files from build.dir
 test - load test data *.sql from test.dir
 </echo>
     </target>
+
+    <macrodef name="dbut-apply-sql">
+        <attribute name="onErrorStop"/>
+        <attribute name="host"/>
+        <attribute name="port"/>
+        <attribute name="user"/>
+        <attribute name="name"/>
+        <attribute name="dir"/>
+        <attribute name="include"/>
+        <sequential>
+            <apply executable="psql" failonerror="true" verbose="true">
+              <arg value="--set=ON_ERROR_STOP=@{onErrorStop}"/>
+              <arg value="-h"/>
+              <arg value="@{host}"/>
+              <arg value="-p"/>
+              <arg value="@{port}"/>
+              <arg value="-U"/>
+              <arg value="@{user}"/>
+              <arg value="-d"/>
+              <arg value="@{name}"/>
+              <arg value="-f"/>
+              <fileset dir="@{dir}">
+                <patternset>
+                  <include name="@{include}"/>
+                </patternset>
+              </fileset>
+            </apply>
+        </sequential>
+    </macrodef>
+
     <target name="clean">
       <exec executable="dropdb" failonerror="true" failifexecutionfails="true">
         <arg value="--if-exists"/>
@@ -69,43 +99,27 @@ test - load test data *.sql from test.dir
       </exec>
     </target>
     <target name="build-sql">
-        <apply executable="psql" failonerror="true" verbose="true">
-          <arg value="--set=ON_ERROR_STOP=${build.on_error_stop}"/>
-          <arg value="-h"/>
-          <arg value="${db.host}"/>
-          <arg value="-p"/>
-          <arg value="${db.port}"/>
-          <arg value="-U"/>
-          <arg value="${db.user}"/>
-          <arg value="-d"/>
-          <arg value="${db.name}"/>
-          <arg value="-f"/>
-          <fileset dir="${build.dir}">
-            <patternset>
-              <include name="${build.include}"/>
-            </patternset>
-          </fileset>
-        </apply>
+        <dbut-apply-sql
+            onErrorStop="${build.on_error_stop}"
+            host="${db.host}"
+            port="${db.port}"
+            user="${db.user}"
+            name="${db.name}"
+            dir="${build.dir}"
+            include="${build.include}"
+        />
     </target>
     <target name="build" depends="build-db,build-sql">
     </target>
     <target name="test">
-      <apply executable="psql" failonerror="true" verbose="true">
-        <arg value="--set=ON_ERROR_STOP=${test.on_error_stop}"/>
-        <arg value="-h"/>
-        <arg value="${db.host}"/>
-        <arg value="-p"/>
-        <arg value="${db.port}"/>
-        <arg value="-U"/>
-        <arg value="${db.user}"/>
-        <arg value="-d"/>
-        <arg value="${db.name}"/>
-        <arg value="-f"/>
-        <fileset dir="${test.dir}">
-          <patternset>
-            <include name="${test.include}"/>
-          </patternset>
-        </fileset>
-      </apply>
+        <dbut-apply-sql
+            onErrorStop="${build.on_error_stop}"
+            host="${db.host}"
+            port="${db.port}"
+            user="${db.user}"
+            name="${db.name}"
+            dir="${test.dir}"
+            include="${test.include}"
+        />
     </target>
 </project>
