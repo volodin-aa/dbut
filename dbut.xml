@@ -24,15 +24,17 @@
     <property name="db.icu-locale" value="und-x-icu"/>
 
     <target name="help">
-        <echo>dbut v0.1.0
+        <echo>dbut v0.2.0
 DataBase Unit Tests
 
 Targets:
 
 help - help
 clean - DROP database
-build - create database and load *.sql files
-test - load test data from *.sql
+build - create database and load *.sql files from build.dir
+    build-db - only create database
+    build-sql - only load *.sql files from build.dir
+test - load test data *.sql from test.dir
 </echo>
     </target>
     <target name="clean">
@@ -48,7 +50,7 @@ test - load test data from *.sql
         <arg value="${db.name}"/>
       </exec>
     </target>
-    <target name="build">
+    <target name="build-db">
       <exec executable="createdb" failonerror="true">
         <arg value="-h"/>
         <arg value="${db.host}"/>
@@ -65,23 +67,27 @@ test - load test data from *.sql
         <arg value="--template=${db.template}"/>
         <arg value="${db.name}"/>
       </exec>
-      <apply executable="psql" failonerror="true" verbose="true">
-        <arg value="--set=ON_ERROR_STOP=${build.on_error_stop}"/>
-        <arg value="-h"/>
-        <arg value="${db.host}"/>
-        <arg value="-p"/>
-        <arg value="${db.port}"/>
-        <arg value="-U"/>
-        <arg value="${db.user}"/>
-        <arg value="-d"/>
-        <arg value="${db.name}"/>
-        <arg value="-f"/>
-        <fileset dir="${build.dir}">
-          <patternset>
-            <include name="${build.include}"/>
-          </patternset>
-        </fileset>
-      </apply>
+    </target>
+    <target name="build-sql">
+        <apply executable="psql" failonerror="true" verbose="true">
+          <arg value="--set=ON_ERROR_STOP=${build.on_error_stop}"/>
+          <arg value="-h"/>
+          <arg value="${db.host}"/>
+          <arg value="-p"/>
+          <arg value="${db.port}"/>
+          <arg value="-U"/>
+          <arg value="${db.user}"/>
+          <arg value="-d"/>
+          <arg value="${db.name}"/>
+          <arg value="-f"/>
+          <fileset dir="${build.dir}">
+            <patternset>
+              <include name="${build.include}"/>
+            </patternset>
+          </fileset>
+        </apply>
+    </target>
+    <target name="build" depends="build-db,build-sql">
     </target>
     <target name="test">
       <apply executable="psql" failonerror="true" verbose="true">
