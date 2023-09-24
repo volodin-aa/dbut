@@ -58,11 +58,7 @@ test - load test data *.sql from test.dir
               <arg value="-d"/>
               <arg value="@{name}"/>
               <arg value="-f"/>
-              <fileset dir="@{dir}">
-                <patternset>
-                  <include name="@{include}"/>
-                </patternset>
-              </fileset>
+              <multirootfileset basedirs="@{dir}" includes="@{include}"/>
             </apply>
         </sequential>
     </macrodef>
