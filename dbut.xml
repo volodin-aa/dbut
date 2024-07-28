@@ -1,30 +1,39 @@
 <?xml version="1.0"?>
-<project name="dbut" default="help">
+<project name="dbut" default="help"  xmlns:if="ant:if" xmlns:unless="ant:unless">
     <property name="dbut.properties" value="dbut.properties"/>
     <property file="${dbut.properties}"/>
 
     <property name="build.dir" value="build"/>
     <property name="build.include" value="**/*.sql"/>
     <property name="build.on_error_stop" value="on"/>
+    <property name="build.erroronmissingdir" value="true"/>
+
+	<property name="update.dir" value="update"/>
+    <property name="update.include" value="**/*.sql"/>
+    <property name="update.on_error_stop" value="on"/>
+    <property name="update.erroronmissingdir" value="true"/>
 
 	<property name="test.dir" value="test"/>
     <property name="test.include" value="**/*.sql"/>
     <property name="test.on_error_stop" value="on"/>
+    <property name="test.erroronmissingdir" value="true"/>
 
     <property name="db.host" value=""/>
     <property name="db.port" value=""/>
     <property name="db.user" value=""/>
     <property name="db.name" value=""/>
-    <property name="db.template" value="template0"/>
     <property name="db.encoding" value="UTF8"/>
-    <property name="db.locale" value="C.UTF-8"/>
-    <property name="db.lc-collate" value="${db.locale}"/>
-    <property name="db.lc-ctype" value="${db.locale}"/>
-    <property name="db.locale-provider" value="icu"/>
-    <property name="db.icu-locale" value="und-x-icu"/>
+
+	<!-- optional property name="db.locale" value="C.UTF-8" -->
+    <property name="db.lc-collate" value="${db.locale}" if:set="db.locale"/>
+    <property name="db.lc-ctype" value="${db.locale}" if:set="db.locale"/>
+
+	<!-- optional property name="db.template" value="template0" -->
+    <!-- optional property name="db.locale-provider" value="icu" -->
+    <!-- optional property name="db.icu-locale" value="und-x-icu" -->
 
     <target name="help">
-        <echo>dbut v0.2.0
+        <echo>dbut v1.0.0
 DataBase Unit Tests
 
 Targets:
@@ -32,8 +41,7 @@ Targets:
 help - help
 clean - DROP database
 build - create database and load *.sql files from build.dir
-    build-db - only create database
-    build-sql - only load *.sql files from build.dir
+update - only load *.sql from update.dir
 test - load test data *.sql from test.dir
 </echo>
     </target>
@@ -46,6 +54,7 @@ test - load test data *.sql from test.dir
         <attribute name="name"/>
         <attribute name="dir"/>
         <attribute name="include"/>
+        <attribute name="erroronmissingdir"/>
         <sequential>
             <apply executable="psql" failonerror="true" verbose="true">
               <arg value="--set=ON_ERROR_STOP=@{onErrorStop}"/>
@@ -58,7 +67,7 @@ test - load test data *.sql from test.dir
               <arg value="-d"/>
               <arg value="@{name}"/>
               <arg value="-f"/>
-              <multirootfileset basedirs="@{dir}" includes="@{include}"/>
+              <multirootfileset basedirs="@{dir}" includes="@{include}" erroronmissingdir="@{erroronmissingdir}"/>
             </apply>
         </sequential>
     </macrodef>
@@ -76,25 +85,23 @@ test - load test data *.sql from test.dir
         <arg value="${db.name}"/>
       </exec>
     </target>
-    <target name="build-db">
-      <exec executable="createdb" failonerror="true">
-        <arg value="-h"/>
-        <arg value="${db.host}"/>
-        <arg value="-p"/>
-        <arg value="${db.port}"/>
-        <arg value="-U"/>
-        <arg value="${db.user}"/>
-        <arg value="-E"/>
-        <arg value="${db.encoding}"/>
-        <arg value="--lc-collate=${db.lc-collate}"/>
-        <arg value="--lc-ctype=${db.lc-ctype}"/>
-        <arg value="--locale-provider=${db.locale-provider}"/>
-        <arg value="--icu-locale=${db.icu-locale}"/>
-        <arg value="--template=${db.template}"/>
-        <arg value="${db.name}"/>
-      </exec>
-    </target>
-    <target name="build-sql">
+    <target name="build">
+        <exec executable="createdb" failonerror="true">
+          <arg value="-h"/>
+          <arg value="${db.host}"/>
+          <arg value="-p"/>
+          <arg value="${db.port}"/>
+          <arg value="-U"/>
+          <arg value="${db.user}"/>
+          <arg value="-E"/>
+          <arg value="${db.encoding}"/>
+          <arg value="--lc-collate=${db.lc-collate}" if:set="db.lc-collate"/>
+          <arg value="--lc-ctype=${db.lc-ctype}" if:set="db.lc-ctype"/>
+          <arg value="--locale-provider=${db.locale-provider}" if:set="db.locale-provider"/>
+          <arg value="--icu-locale=${db.icu-locale}" if:set="db.icu-locale"/>
+          <arg value="--template=${db.template}" if:set="db.template"/>
+          <arg value="${db.name}"/>
+        </exec>
         <dbut-apply-sql
             onErrorStop="${build.on_error_stop}"
             host="${db.host}"
@@ -103,19 +110,31 @@ test - load test data *.sql from test.dir
             name="${db.name}"
             dir="${build.dir}"
             include="${build.include}"
+            erroronmissingdir="${build.erroronmissingdir}"
         />
-    </target>
-    <target name="build" depends="build-db,build-sql">
     </target>
     <target name="test">
         <dbut-apply-sql
-            onErrorStop="${build.on_error_stop}"
+            onErrorStop="${test.on_error_stop}"
             host="${db.host}"
             port="${db.port}"
             user="${db.user}"
             name="${db.name}"
             dir="${test.dir}"
             include="${test.include}"
+            erroronmissingdir="${test.erroronmissingdir}"
+        />
+    </target>
+    <target name="update">
+        <dbut-apply-sql
+            onErrorStop="${update.on_error_stop}"
+            host="${db.host}"
+            port="${db.port}"
+            user="${db.user}"
+            name="${db.name}"
+            dir="${update.dir}"
+            include="${update.include}"
+            erroronmissingdir="${update.erroronmissingdir}"
         />
     </target>
 </project>
