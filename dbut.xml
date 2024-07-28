@@ -8,15 +8,15 @@
     <property name="build.on_error_stop" value="on"/>
     <property name="build.erroronmissingdir" value="true"/>
 
-	<property name="test.dir" value="test"/>
-    <property name="test.include" value="**/*.sql"/>
-    <property name="test.on_error_stop" value="on"/>
-    <property name="test.erroronmissingdir" value="true"/>
-
 	<property name="update.dir" value="update"/>
     <property name="update.include" value="**/*.sql"/>
     <property name="update.on_error_stop" value="on"/>
     <property name="update.erroronmissingdir" value="true"/>
+
+	<property name="test.dir" value="test"/>
+    <property name="test.include" value="**/*.sql"/>
+    <property name="test.on_error_stop" value="on"/>
+    <property name="test.erroronmissingdir" value="true"/>
 
     <property name="db.host" value=""/>
     <property name="db.port" value=""/>
@@ -31,7 +31,7 @@
     <property name="db.icu-locale" value="und-x-icu"/>
 
     <target name="help">
-        <echo>dbut v0.3.0
+        <echo>dbut v0.4.0
 DataBase Unit Tests
 
 Targets:
@@ -41,8 +41,8 @@ clean - DROP database
 build - create database and load *.sql files from build.dir
     build-db - only create database
     build-sql - only load *.sql files from build.dir
-test - load test data *.sql from test.dir
 update - only load *.sql from update.dir
+test - load test data *.sql from test.dir
 </echo>
     </target>
 

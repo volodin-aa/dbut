@@ -1,6 +1,6 @@
 # dbut
 
-dbut v0.3.0
+dbut v0.4.0
 DataBase Unit Tests
 
 ### Targets
@@ -10,5 +10,6 @@ DataBase Unit Tests
 - build - create database and load *.sql files from build.dir
     - build-db - only create database
     - build-sql - only load *.sql files from build.dir
+- update - only load *.sql from update.dir
 - test - load test data from *.sql
 
