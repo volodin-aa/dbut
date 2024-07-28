@@ -11,6 +11,10 @@
     <property name="test.include" value="**/*.sql"/>
     <property name="test.on_error_stop" value="on"/>
 
+	<property name="update.dir" value="update"/>
+    <property name="update.include" value="**/*.sql"/>
+    <property name="update.on_error_stop" value="on"/>
+
     <property name="db.host" value=""/>
     <property name="db.port" value=""/>
     <property name="db.user" value=""/>
@@ -35,6 +39,7 @@ build - create database and load *.sql files from build.dir
     build-db - only create database
     build-sql - only load *.sql files from build.dir
 test - load test data *.sql from test.dir
+update - only load *.sql from update.dir
 </echo>
     </target>
 
@@ -116,6 +121,17 @@ test - load test data *.sql from test.dir
             name="${db.name}"
             dir="${test.dir}"
             include="${test.include}"
+        />
+    </target>
+    <target name="update">
+        <dbut-apply-sql
+            onErrorStop="${build.on_error_stop}"
+            host="${db.host}"
+            port="${db.port}"
+            user="${db.user}"
+            name="${db.name}"
+            dir="${update.dir}"
+            include="${update.include}"
         />
     </target>
 </project>
