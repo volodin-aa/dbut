@@ -85,25 +85,23 @@ update - only load *.sql from update.dir
         <arg value="${db.name}"/>
       </exec>
     </target>
-    <target name="build-db">
-      <exec executable="createdb" failonerror="true">
-        <arg value="-h"/>
-        <arg value="${db.host}"/>
-        <arg value="-p"/>
-        <arg value="${db.port}"/>
-        <arg value="-U"/>
-        <arg value="${db.user}"/>
-        <arg value="-E"/>
-        <arg value="${db.encoding}"/>
-        <arg value="--lc-collate=${db.lc-collate}"/>
-        <arg value="--lc-ctype=${db.lc-ctype}"/>
-        <arg value="--locale-provider=${db.locale-provider}"/>
-        <arg value="--icu-locale=${db.icu-locale}"/>
-        <arg value="--template=${db.template}"/>
-        <arg value="${db.name}"/>
-      </exec>
-    </target>
-    <target name="build-sql">
+    <target name="build">
+        <exec executable="createdb" failonerror="true">
+          <arg value="-h"/>
+          <arg value="${db.host}"/>
+          <arg value="-p"/>
+          <arg value="${db.port}"/>
+          <arg value="-U"/>
+          <arg value="${db.user}"/>
+          <arg value="-E"/>
+          <arg value="${db.encoding}"/>
+          <arg value="--lc-collate=${db.lc-collate}"/>
+          <arg value="--lc-ctype=${db.lc-ctype}"/>
+          <arg value="--locale-provider=${db.locale-provider}"/>
+          <arg value="--icu-locale=${db.icu-locale}"/>
+          <arg value="--template=${db.template}"/>
+          <arg value="${db.name}"/>
+        </exec>
         <dbut-apply-sql
             onErrorStop="${build.on_error_stop}"
             host="${db.host}"
@@ -114,8 +112,6 @@ update - only load *.sql from update.dir
             include="${build.include}"
             erroronmissingdir="${build.erroronmissingdir}"
         />
-    </target>
-    <target name="build" depends="build-db,build-sql">
     </target>
     <target name="test">
         <dbut-apply-sql
