@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="dbut" default="help">
+<project name="dbut" default="help"  xmlns:if="ant:if" xmlns:unless="ant:unless">
     <property name="dbut.properties" value="dbut.properties"/>
     <property file="${dbut.properties}"/>
 
@@ -22,16 +22,18 @@
     <property name="db.port" value=""/>
     <property name="db.user" value=""/>
     <property name="db.name" value=""/>
-    <property name="db.template" value="template0"/>
     <property name="db.encoding" value="UTF8"/>
-    <property name="db.locale" value="C.UTF-8"/>
-    <property name="db.lc-collate" value="${db.locale}"/>
-    <property name="db.lc-ctype" value="${db.locale}"/>
-    <property name="db.locale-provider" value="icu"/>
-    <property name="db.icu-locale" value="und-x-icu"/>
+
+	<!-- optional property name="db.locale" value="C.UTF-8" -->
+    <property name="db.lc-collate" value="${db.locale}" if:set="db.locale"/>
+    <property name="db.lc-ctype" value="${db.locale}" if:set="db.locale"/>
+
+	<!-- optional property name="db.template" value="template0" -->
+    <!-- optional property name="db.locale-provider" value="icu" -->
+    <!-- optional property name="db.icu-locale" value="und-x-icu" -->
 
     <target name="help">
-        <echo>dbut v0.4.0
+        <echo>dbut v1.0.0
 DataBase Unit Tests
 
 Targets:
@@ -95,11 +97,11 @@ test - load test data *.sql from test.dir
           <arg value="${db.user}"/>
           <arg value="-E"/>
           <arg value="${db.encoding}"/>
-          <arg value="--lc-collate=${db.lc-collate}"/>
-          <arg value="--lc-ctype=${db.lc-ctype}"/>
-          <arg value="--locale-provider=${db.locale-provider}"/>
-          <arg value="--icu-locale=${db.icu-locale}"/>
-          <arg value="--template=${db.template}"/>
+          <arg value="--lc-collate=${db.lc-collate}" if:set="db.lc-collate"/>
+          <arg value="--lc-ctype=${db.lc-ctype}" if:set="db.lc-ctype"/>
+          <arg value="--locale-provider=${db.locale-provider}" if:set="db.locale-provider"/>
+          <arg value="--icu-locale=${db.icu-locale}" if:set="db.icu-locale"/>
+          <arg value="--template=${db.template}" if:set="db.template"/>
           <arg value="${db.name}"/>
         </exec>
         <dbut-apply-sql

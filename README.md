@@ -1,6 +1,6 @@
 # dbut
 
-dbut v0.4.0
+dbut v1.0.0
 DataBase Unit Tests
 
 ### Targets
