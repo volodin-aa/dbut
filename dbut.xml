@@ -6,14 +6,17 @@
     <property name="build.dir" value="build"/>
     <property name="build.include" value="**/*.sql"/>
     <property name="build.on_error_stop" value="on"/>
+    <property name="build.erroronmissingdir" value="true"/>
 
 	<property name="test.dir" value="test"/>
     <property name="test.include" value="**/*.sql"/>
     <property name="test.on_error_stop" value="on"/>
+    <property name="test.erroronmissingdir" value="true"/>
 
 	<property name="update.dir" value="update"/>
     <property name="update.include" value="**/*.sql"/>
     <property name="update.on_error_stop" value="on"/>
+    <property name="update.erroronmissingdir" value="true"/>
 
     <property name="db.host" value=""/>
     <property name="db.port" value=""/>
@@ -28,7 +31,7 @@
     <property name="db.icu-locale" value="und-x-icu"/>
 
     <target name="help">
-        <echo>dbut v0.2.0
+        <echo>dbut v0.3.0
 DataBase Unit Tests
 
 Targets:
@@ -51,6 +54,7 @@ update - only load *.sql from update.dir
         <attribute name="name"/>
         <attribute name="dir"/>
         <attribute name="include"/>
+        <attribute name="erroronmissingdir"/>
         <sequential>
             <apply executable="psql" failonerror="true" verbose="true">
               <arg value="--set=ON_ERROR_STOP=@{onErrorStop}"/>
@@ -63,7 +67,7 @@ update - only load *.sql from update.dir
               <arg value="-d"/>
               <arg value="@{name}"/>
               <arg value="-f"/>
-              <multirootfileset basedirs="@{dir}" includes="@{include}"/>
+              <multirootfileset basedirs="@{dir}" includes="@{include}" erroronmissingdir="@{erroronmissingdir}"/>
             </apply>
         </sequential>
     </macrodef>
@@ -108,6 +112,7 @@ update - only load *.sql from update.dir
             name="${db.name}"
             dir="${build.dir}"
             include="${build.include}"
+            erroronmissingdir="${build.erroronmissingdir}"
         />
     </target>
     <target name="build" depends="build-db,build-sql">
@@ -121,6 +126,7 @@ update - only load *.sql from update.dir
             name="${db.name}"
             dir="${test.dir}"
             include="${test.include}"
+            erroronmissingdir="${test.erroronmissingdir}"
         />
     </target>
     <target name="update">
@@ -132,6 +138,7 @@ update - only load *.sql from update.dir
             name="${db.name}"
             dir="${update.dir}"
             include="${update.include}"
+            erroronmissingdir="${update.erroronmissingdir}"
         />
     </target>
 </project>
