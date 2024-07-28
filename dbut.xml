@@ -119,7 +119,7 @@ update - only load *.sql from update.dir
     </target>
     <target name="test">
         <dbut-apply-sql
-            onErrorStop="${build.on_error_stop}"
+            onErrorStop="${test.on_error_stop}"
             host="${db.host}"
             port="${db.port}"
             user="${db.user}"
@@ -131,7 +131,7 @@ update - only load *.sql from update.dir
     </target>
     <target name="update">
         <dbut-apply-sql
-            onErrorStop="${build.on_error_stop}"
+            onErrorStop="${update.on_error_stop}"
             host="${db.host}"
             port="${db.port}"
             user="${db.user}"
