@@ -25,15 +25,16 @@
     <property name="db.encoding" value="UTF8"/>
 
 	<!-- optional property name="db.locale" value="C.UTF-8" -->
-    <property name="db.lc-collate" value="${db.locale}" if:set="db.locale"/>
+
+	<property name="db.lc-collate" value="${db.locale}" if:set="db.locale"/>
     <property name="db.lc-ctype" value="${db.locale}" if:set="db.locale"/>
 
-	<!-- optional property name="db.template" value="template0" -->
-    <!-- optional property name="db.locale-provider" value="icu" -->
+	<property name="db.template" value="template0" if:set="db.icu-locale"/>
+    <property name="db.locale-provider" value="icu" if:set="db.icu-locale"/>
     <!-- optional property name="db.icu-locale" value="und-x-icu" -->
 
     <target name="help">
-        <echo>dbut v1.0.0
+        <echo>dbut v1.1.0
 DataBase Unit Tests
 
 Targets:
