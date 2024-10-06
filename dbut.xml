@@ -6,16 +6,19 @@
     <property name="build.dir" value="build"/>
     <property name="build.include" value="**/*.sql"/>
     <property name="build.on_error_stop" value="on"/>
+    <property name="build.casesensitive" value="true"/>
     <property name="build.erroronmissingdir" value="true"/>
 
 	<property name="update.dir" value="update"/>
     <property name="update.include" value="**/*.sql"/>
     <property name="update.on_error_stop" value="on"/>
+    <property name="update.casesensitive" value="true"/>
     <property name="update.erroronmissingdir" value="true"/>
 
 	<property name="test.dir" value="test"/>
     <property name="test.include" value="**/*.sql"/>
     <property name="test.on_error_stop" value="on"/>
+    <property name="test.casesensitive" value="true"/>
     <property name="test.erroronmissingdir" value="true"/>
 
     <property name="db.host" value=""/>
@@ -34,7 +37,7 @@
     <!-- optional property name="db.icu-locale" value="und-x-icu" -->
 
     <target name="help">
-        <echo>dbut v1.1.0
+        <echo>dbut v1.2.0
 DataBase Unit Tests
 
 Targets:
@@ -55,6 +58,7 @@ test - load test data *.sql from test.dir
         <attribute name="name"/>
         <attribute name="dir"/>
         <attribute name="include"/>
+        <attribute name="casesensitive"/>
         <attribute name="erroronmissingdir"/>
         <sequential>
             <apply executable="psql" failonerror="true" verbose="true">
@@ -68,7 +72,9 @@ test - load test data *.sql from test.dir
               <arg value="-d"/>
               <arg value="@{name}"/>
               <arg value="-f"/>
-              <multirootfileset basedirs="@{dir}" includes="@{include}" erroronmissingdir="@{erroronmissingdir}"/>
+                  <sort>
+                      <multirootfileset basedirs="@{dir}" includes="@{include}" casesensitive="@{casesensitive}" erroronmissingdir="@{erroronmissingdir}"/>
+                  </sort>
             </apply>
         </sequential>
     </macrodef>
@@ -111,6 +117,7 @@ test - load test data *.sql from test.dir
             name="${db.name}"
             dir="${build.dir}"
             include="${build.include}"
+            casesensitive="${build.casesensitive}"
             erroronmissingdir="${build.erroronmissingdir}"
         />
     </target>
@@ -123,6 +130,7 @@ test - load test data *.sql from test.dir
             name="${db.name}"
             dir="${test.dir}"
             include="${test.include}"
+            casesensitive="${test.casesensitive}"
             erroronmissingdir="${test.erroronmissingdir}"
         />
     </target>
@@ -135,6 +143,7 @@ test - load test data *.sql from test.dir
             name="${db.name}"
             dir="${update.dir}"
             include="${update.include}"
+            casesensitive="${update.casesensitive}"
             erroronmissingdir="${update.erroronmissingdir}"
         />
     </target>
